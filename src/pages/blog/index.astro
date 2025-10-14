@@ -1,0 +1,121 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import {
+    createSmartSummary,
+    generateAutoSummary,
+} from "../../utils/autoSummary";
+import { getCollection } from "astro:content";
+const blogPosts = (
+    await getCollection("blog", ({ data }) => {
+        return !data.draft;
+    })
+)
+    .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+    .slice(0, 5);
+const diaryPosts = (
+    await getCollection("diary", ({ data }) => {
+        return !data.draft;
+    })
+)
+    .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+    .slice(0, 5);
+---
+
+<Layout title="ブログ | 劇団万絵巻">
+    <div class="container-lg p-0">
+        <main class="custom-grid">
+            <section class="px-3 min-w-100">
+                <div class="d-flex justify-between">
+                    <h2 class="h2">舞台裏ノート</h2>
+                    <a href="" class="btn">すべて見る</a>
+                </div>
+                <div class="mt-4 vstack g-3">
+                    {
+                        blogPosts.map((post) => {
+                            const smartSummary = createSmartSummary(post, {
+                                maxLength: 150,
+                                preferManual: true,
+                                suffix: "…",
+                            });
+                            return (
+                                <article class="custom-card">
+                                    <time
+                                        class="mb-2"
+                                        datetime={post.data.date.toISOString()}
+                                    >
+                                        {post.data.date.toLocaleDateString(
+                                            "ja-JP",
+                                        )}
+                                    </time>
+                                    <h3 class="h4">{post.data.title}</h3>
+                                    <p class="mt-2">{smartSummary}</p>
+                                </article>
+                            );
+                        })
+                    }
+                </div>
+            </section>
+            <section class="px-3 min-w-100">
+                <div class="d-flex justify-between">
+                    <h2 class="h2">劇団員日記</h2>
+                    <a href="/blog/diary/" class="btn">すべて見る</a>
+                </div>
+                <div class="mt-4 vstack g-3">
+                    {
+                        diaryPosts.map((post) => {
+                            const smartSummary = createSmartSummary(post, {
+                                maxLength: 150,
+                                preferManual: true,
+                                suffix: "…",
+                            });
+                            return (
+                                <article class="custom-card">
+                                    <time
+                                        class="mb-2"
+                                        datetime={post.data.date.toISOString()}
+                                    >
+                                        {post.data.date.toLocaleDateString(
+                                            "ja-JP",
+                                        )}
+                                    </time>
+                                    <h3 class="h4">
+                                        <a
+                                            class=""
+                                            href={`/blog/diary/${post.data.date.toISOString().split("T")[0]}/`}
+                                        >
+                                            {post.data.title}
+                                        </a>
+                                    </h3>
+                                    <p class="mt-2">{smartSummary}</p>
+                                </article>
+                            );
+                        })
+                    }
+                </div>
+            </section>
+        </main>
+    </div>
+</Layout>
+
+<style>
+    .custom-grid {
+        margin-top: 2.5rem;
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        row-gap: 2.5rem;
+        grid-template-rows: 1fr;
+    }
+    @media screen and (min-width: 768px) {
+        .custom-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    .custom-card {
+        padding: 1.25rem;
+        border: 2px solid black;
+        border-radius: 12px;
+        &:hover {
+            border-color: #1f4788;
+        }
+    }
+</style>

@@ -1,0 +1,145 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { getCollection } from "astro:content";
+import { Image } from "astro:assets";
+import type { CollectionEntry } from "astro:content";
+
+// Get all performances using the new Content Layer API
+const allPerformances = await getCollection("pastPerformancesCollection");
+
+// Type-safe performance entries
+type PerformanceEntry = CollectionEntry<"pastPerformancesCollection">;
+
+// Sort performances by date (newest first)
+const sortedPerformances = allPerformances.sort(
+    (a: PerformanceEntry, b: PerformanceEntry) => {
+        return b.data.date.getTime() - a.data.date.getTime();
+    },
+);
+
+// Group performances by year with better typing
+const performancesByYear = new Map<number, PerformanceEntry[]>();
+
+sortedPerformances.forEach((performance) => {
+    const year = performance.data.date.getFullYear();
+
+    if (!performancesByYear.has(year)) {
+        performancesByYear.set(year, []);
+    }
+
+    performancesByYear.get(year)!.push(performance);
+});
+
+// Get sorted years (newest first)
+const sortedYears = Array.from(performancesByYear.keys()).sort((a, b) => b - a);
+
+// Optional: Get performances by specific year using filter
+// const performances2025 = await getCollection('past-performances', ({ id }) => {
+//     return id.startsWith('2025/');
+// });
+
+// Optional: Get performances with additional filtering
+// const recentPerformances = await getCollection('past-performances', ({ data }) => {
+//     const currentYear = new Date().getFullYear();
+//     return data.date.getFullYear() >= currentYear - 2; // Last 2 years
+// });
+---
+
+<Layout
+    title="過去公演 | 劇団万絵巻"
+    description="劇団万絵巻の年別公演記録アーカイブ。当劇団の歴史を彩る舞台作品を時系列でご覧いただけます。演目、公演日程、会場情報など、過去の活動実績を総合的にご紹介するページです。"
+>
+    <main class="">
+        <section class="container-lg mt-6">
+            <h1 class="h1 text-center">過去公演</h1>
+            <p class="mt-3 text-center">過去の軌跡を振り返る</p>
+        </section>
+        <section class="container-lg my-6">
+            <div class="d-flex flex-wrap g-3 justify-center">
+                {
+                    sortedYears.map((year) => (
+                        <a href={`#${year}`} class="btn btn-xs">
+                            {year}
+                        </a>
+                    ))
+                }
+            </div>
+        </section>
+        {
+            sortedYears.map((year) => (
+                <section id={`${year}`} class="">
+                    <div class="container-lg">
+                        <h2 class="h2 my-5">{year}</h2>
+                    </div>
+                    <div class="container-md garden">
+                        {performancesByYear.get(year)!.map((performance) => {
+                            const performanceDate =
+                                performance.data.date.toLocaleDateString(
+                                    "ja-JP",
+                                    {
+                                        year: "numeric",
+                                        month: "long",
+                                        day: "numeric",
+                                    },
+                                );
+                            return (
+                                <article class="card plot">
+                                    {performance.data.image ? (
+                                        <Image
+                                            src={performance.data.image}
+                                            alt={performance.data.title}
+                                            class="card-img-left"
+                                        />
+                                    ) : (
+                                        <img
+                                            class="card-img-left"
+                                            src="https://placehold.co/600x400"
+                                            alt={performance.data.title}
+                                        />
+                                    )}
+                                    <div class="card-body">
+                                        <h2 class="card-title">
+                                            {performance.data.title}
+                                        </h2>
+                                        <p class="card-text">
+                                            {performanceDate}
+                                        </p>
+                                        <p class="card-text">
+                                            演出: {performance.data.director}
+                                        </p>
+                                        <p class="card-text">
+                                            脚本: {performance.data.playwright}
+                                        </p>
+                                        <p class="card-text">
+                                            {performance.data.excerpt}
+                                        </p>
+                                        <p class="card-text text-right">
+                                            <a
+                                                class="d-inline-block btn btn-primary"
+                                                href={`/past-performances/${performance.id}/`}
+                                            >
+                                                詳細を見る
+                                            </a>
+                                        </p>
+                                    </div>
+                                </article>
+                            );
+                        })}
+                    </div>
+                </section>
+            ))
+        }
+        <section class="bg-grey-100 py-6 mt-6">
+            <div class="container-sm">
+                <h2 class="h2 mb-3">私たちの公演の歴史</h2>
+                <p class="mb-3">
+                    劇団の設立以来、古典的な作品から現代的な作品まで、様々な舞台を制作してきました。このアーカイブは、多様なストーリーテリングと芸術的な卓越性への私たちの取り組みを表しています。
+                </p>
+                <p class="">
+                    公演履歴の詳細情報や、研究目的のためのアーカイブ資料のリクエストについては、
+                    <a href="/contact/" class="link">お問い合わせ</a>ください。
+                </p>
+            </div>
+        </section>
+    </main>
+</Layout>

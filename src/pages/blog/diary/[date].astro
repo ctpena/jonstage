@@ -1,0 +1,35 @@
+---
+import ResourcesLayout from "../../../layouts/ResourcesLayout.astro";
+import { getCollection, render } from "astro:content";
+
+export async function getStaticPaths() {
+    const posts = await getCollection("diary");
+    return posts.map((post) => ({
+        params: { date: post.data.date.toISOString().split("T")[0] },
+        props: { post },
+    }));
+}
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<ResourcesLayout title={post.data.title + " - 劇団員日記 | 劇団万絵巻"}>
+    <header class="custom-main-content-header">
+        <h1 class="h1 mb-3">{post.data.title}</h1>
+        <time class="mb-3" datetime={post.data.date.toISOString()}>
+            {post.data.date.toLocaleDateString("ja-JP")}
+        </time>
+    </header>
+    <div class="content custom-content">
+        <Content />
+    </div>
+</ResourcesLayout>
+
+<style>
+    .custom-content {
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+    }
+</style>

@@ -1,0 +1,306 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import { getCollection, render } from "astro:content";
+import type { GetStaticPaths, Page } from "astro";
+
+type PostData = {
+    post: any;
+    Content: any;
+};
+
+export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
+    const allDiaryPosts = (
+        await getCollection("diary", ({ data }) => {
+            return !data.draft;
+        })
+    ).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+    // 記事のレンダリングを行う
+    const renderedPosts = await Promise.all(
+        allDiaryPosts.map(async (post) => {
+            const { Content } = await render(post);
+            return { post, Content };
+        }),
+    );
+
+    // ページネーションを適用（1ページあたり5記事）
+    return paginate(renderedPosts, {
+        pageSize: 5,
+    });
+};
+
+// ページ番号の配列を生成する関数（省略表示対応）
+function generatePageNumbers(
+    currentPage: number,
+    lastPage: number,
+): (number | "dots")[] {
+    const range = 0; // 現在のページの前後に表示するページ数
+    const numbers: (number | "dots")[] = [];
+
+    // 現在のページ周辺のページ番号を計算
+    const start = Math.max(1, currentPage - range);
+    const end = Math.min(lastPage, currentPage + range);
+
+    // 左側の省略記号が必要かチェック
+    if (start > 1) {
+        numbers.push("dots");
+    }
+
+    // 現在のページ周辺のページ番号
+    for (let i = start; i <= end; i++) {
+        numbers.push(i);
+    }
+
+    // 右側の省略記号が必要かチェック
+    if (end < lastPage) {
+        numbers.push("dots");
+    }
+
+    return numbers;
+}
+
+interface Props {
+    page: Page<PostData>;
+}
+
+const { page } = Astro.props;
+const pageNumbers = generatePageNumbers(page.currentPage, page.lastPage);
+---
+
+<Layout title={"劇団員日記" + " ページ" + page.currentPage + " | 劇団万絵巻"} description="">
+    <div class="container-sm p-0">
+        <main class="">
+            <div class="mt-5 px-3">
+                <div class="">
+                    <nav class="mb-3">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a class="breadcrumb-link" href="/">ホーム</a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a class="breadcrumb-link" href="/blog/"
+                                    >ブログ</a
+                                >
+                            </li>
+                            <li class="breadcrumb-item">劇団員日記</li>
+                        </ol>
+                    </nav>
+                    <div class="diary-header">
+                        <h1 class="h2">劇団員日記</h1>
+                        <div class="">
+                            ページ {page.currentPage} / {page.lastPage} （全{
+                                page.total
+                            }件）
+                        </div>
+                    </div>
+                    <nav class="mt-4 mb-5">
+                        <ul class="pagination">
+                            {
+                                page.url.first && (
+                                    <li class="pagination-item">
+                                        <a
+                                            class="pagination-link first"
+                                            href={page.url.first}
+                                        />
+                                    </li>
+                                )
+                            }
+                            {
+                                page.url.prev && (
+                                    <li class="pagination-item">
+                                        <a
+                                            class="pagination-link prev"
+                                            href={page.url.prev}
+                                        />
+                                    </li>
+                                )
+                            }
+                            {
+                                pageNumbers.map((pageNum) => {
+                                    if (pageNum === "dots") {
+                                        return (
+                                            <li class="pagination-item">
+                                                <span class="pagination-dots" />
+                                            </li>
+                                        );
+                                    } else if (pageNum === page.currentPage) {
+                                        return (
+                                            <li class="pagination-item">
+                                                <span class="pagination-now">
+                                                    {pageNum}/{page.lastPage}
+                                                </span>
+                                            </li>
+                                        );
+                                    } else {
+                                        return (
+                                            <li class="pagination-item">
+                                                <a
+                                                    class="pagination-link"
+                                                    href={
+                                                        pageNum === 1
+                                                            ? "/blog/diary/"
+                                                            : `/blog/diary/${pageNum}/`
+                                                    }
+                                                >
+                                                    {pageNum}
+                                                </a>
+                                            </li>
+                                        );
+                                    }
+                                })
+                            }
+                            {
+                                page.url.next && (
+                                    <li class="pagination-item">
+                                        <a
+                                            class="pagination-link next"
+                                            href={page.url.next}
+                                        />
+                                    </li>
+                                )
+                            }
+                            {
+                                page.url.last && (
+                                    <li class="pagination-item">
+                                        <a
+                                            class="pagination-link last"
+                                            href={page.url.last}
+                                        />
+                                    </li>
+                                )
+                            }
+                        </ul>
+                    </nav>
+                </div>
+                <div class="mt-4 vstack g-7">
+                    {
+                        page.data.map(({ post, Content }) => (
+                            <article class="custom-card">
+                                <h2 class="h5">
+                                    <a
+                                        href={`/blog/diary/${post.data.date.toISOString().split("T")[0]}/`}
+                                    >
+                                        {post.data.title}
+                                    </a>
+                                </h2>
+                                <time
+                                    class="mt-2"
+                                    datetime={post.data.date.toISOString()}
+                                >
+                                    {post.data.date.toLocaleDateString("ja-JP")}
+                                </time>
+                                <div class="content custom-content mt-3">
+                                    <Content />
+                                </div>
+                            </article>
+                        ))
+                    }
+                </div>
+                <nav class="mt-5">
+                    <ul class="pagination">
+                        {
+                            page.url.first && (
+                                <li class="pagination-item">
+                                    <a
+                                        class="pagination-link first"
+                                        href={page.url.first}
+                                    />
+                                </li>
+                            )
+                        }
+                        {
+                            page.url.prev && (
+                                <li class="pagination-item">
+                                    <a
+                                        class="pagination-link prev"
+                                        href={page.url.prev}
+                                    />
+                                </li>
+                            )
+                        }
+                        {
+                            pageNumbers.map((pageNum) => {
+                                if (pageNum === "dots") {
+                                    return (
+                                        <li class="pagination-item">
+                                            <span class="pagination-dots" />
+                                        </li>
+                                    );
+                                } else if (pageNum === page.currentPage) {
+                                    return (
+                                        <li class="pagination-item">
+                                            <span class="pagination-now">
+                                                {pageNum}/{page.lastPage}
+                                            </span>
+                                        </li>
+                                    );
+                                } else {
+                                    return (
+                                        <li class="pagination-item">
+                                            <a
+                                                class="pagination-link"
+                                                href={
+                                                    pageNum === 1
+                                                        ? "/blog/diary/"
+                                                        : `/blog/diary/${pageNum}/`
+                                                }
+                                            >
+                                                {pageNum}
+                                            </a>
+                                        </li>
+                                    );
+                                }
+                            })
+                        }
+                        {
+                            page.url.next && (
+                                <li class="pagination-item">
+                                    <a
+                                        class="pagination-link next"
+                                        href={page.url.next}
+                                    />
+                                </li>
+                            )
+                        }
+                        {
+                            page.url.last && (
+                                <li class="pagination-item">
+                                    <a
+                                        class="pagination-link last"
+                                        href={page.url.last}
+                                    />
+                                </li>
+                            )
+                        }
+                    </ul>
+                </nav>
+            </div>
+        </main>
+    </div>
+</Layout>
+
+<style>
+    .diary-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+    .custom-card {
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #949494;
+    }
+    .custom-content {
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+    }
+    @media (max-width: 768px) {
+        .diary-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    }
+</style>

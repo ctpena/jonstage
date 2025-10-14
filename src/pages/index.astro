@@ -1,0 +1,129 @@
+---
+import Layout from "../layouts/Layout.astro";
+import hero2 from "../assets/hero/2.avif";
+import hero4 from "../assets/hero/4.avif";
+import hero5 from "../assets/hero/5.avif";
+import hero6 from "../assets/hero/6.avif";
+import hero7 from "../assets/hero/7.avif";
+import hero8 from "../assets/hero/8.avif";
+import hero9 from "../assets/hero/9.avif";
+import hero10 from "../assets/hero/10.avif";
+import hero11 from "../assets/hero/11.avif";
+---
+
+<Layout>
+    <main>
+        <section class="custom-hero">
+            <div class="custom-hero-left">
+                <div class="">
+                    <h1 class="fs-48 fw-b text-right">
+                        <span class="orangehight">殺陣！</span>
+                        <span class="orangehight">ダンス！</span>
+                        <span class="orangehight">コメディ！</span><br />
+                        <span class="orangehight">なんでもありのエンタメ劇団！！</span>
+                    </h1>
+                </div>
+
+                <div class="hstack g-3 justify-center mt-4">
+                    <a href="/performances/" class="btn btn-primary"
+                        >公演予定を見る</a
+                    >
+                    <a href="/contact/" class="btn btn-secondary"
+                        >お問い合わせ</a
+                    >
+                </div>
+            </div>
+
+            <div class="custom-hero-right">
+                <div class="photo-item" style="">
+                    <img class="custom-hero-img" src={hero9.src} alt="" />
+                </div>
+                <div class="photo-item" style="grid-column: span 2;">
+                    <img class="custom-hero-img" src={hero8.src} alt="" />
+                </div>
+                <div class="photo-item" style="grid-row: span 2;">
+                    <img class="custom-hero-img" src={hero4.src} alt="" />
+                </div>
+                <div class="photo-item" style="">
+                    <img class="custom-hero-img" src={hero6.src} alt="" />
+                </div>
+                <div class="photo-item" style="">
+                    <img class="custom-hero-img" src={hero5.src} alt="" />
+                </div>
+                <div class="photo-item" style="">
+                    <img class="custom-hero-img" src={hero7.src} alt="" />
+                </div>
+                <div class="photo-item" style="">
+                    <img class="custom-hero-img" src={hero2.src} alt="" />
+                </div>
+            </div>
+        </section>
+
+        <section class="container-lg mt-7 garden g-3">
+            <div class="plot-6">
+                <h2 class="h2 text-center">私たちについて</h2>
+                <p class="mt-3">
+                    劇団万絵巻は1993年以来、質の高い演劇公演を行う学生劇団として知られ、数多くの公演を行ってきました。私たちの使命は、物語に力強い命を吹き込み観客の記憶に残る体験を想像することです。
+                </p>
+                <p class="mt-3">
+                    私たちは芸術的な卓越性、地域社会との関わりを大切にする学生劇団です。情熱あふれる若い才能が集い、伝統と革新を融合させた作品を通じて観客の皆様に感動をお届けします。
+                </p>
+                <a href="/contact/" class="btn btn-primary d-inline-block mt-4"
+                    >お問い合わせ</a
+                >
+            </div>
+            <div class="plot-6">
+                <img src={hero8.src} alt="" />
+            </div>
+        </section>
+    </main>
+</Layout>
+
+<style>
+    .custom-hero {
+        display: flex;
+        padding: 4rem 1rem;
+    }
+    .custom-hero-left {
+        margin-top: 2.5rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        flex: 1;
+    }
+    .custom-hero-right {
+        flex: 1;
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-rows: 1fr 1fr 1fr;
+        gap: 1rem;
+        max-height: calc(100dvh - 300px);
+    }
+    .photo-item {
+        position: relative;
+        overflow: hidden;
+        min-height: 140px;
+    }
+    .custom-hero-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+    }
+
+    .orangehight {
+        position: relative;
+        display: inline-block;
+        &::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background: #ff6b00;
+        }
+    }
+</style>

@@ -1,0 +1,54 @@
+---
+import "../styles/asagaoui.css";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+const {
+    title = "劇団万絵巻 | 関西大学演劇サークル",
+    description = "1993年以来、伝統と革新が融合する学生劇団。物語に命を吹き込み、心に残る感動をお届けします。",
+    siteName = "劇団万絵巻",
+} = Astro.props;
+const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: siteName,
+    url: Astro.url,
+    description: description,
+};
+---
+
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="generator" content={Astro.generator} />
+        <!-- Default Meta -->
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        <script
+            type="application/ld+json"
+            set:html={JSON.stringify(structuredData)}
+        />
+        <!-- Favicon -->
+        <link
+            rel="icon"
+            type="image/png"
+            href="/favicon-96x96.png"
+            sizes="96x96"
+        />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+        <link
+            rel="apple-touch-icon"
+            sizes="180x180"
+            href="/apple-touch-icon.png"
+        />
+        <meta name="apple-mobile-web-app-title" content="劇団万絵巻" />
+        <link rel="manifest" href="/site.webmanifest" />
+    </head>
+    <body class="aui">
+        <Header />
+        <slot />
+        <Footer />
+    </body>
+</html>
