@@ -45,6 +45,10 @@ JonStageは次のフォルダとファイルで構成されています。
 - UI: [AsagaoUI](https://github.com/ctpena/asagaoui)
 - スタイル: [SCSS](https://sass-lang.com/)
 
+## 団員のみなさんへ
+
+JonStageはJonによって設計と構築され、2006年からの劇団員日記、過去の公演情報などの劇団万絵巻が生み出したほぼすべてのデータが蓄積されたプロジェクトです。
+
 ## 貢献
 
 JonStageは、劇団員・OB/OG・関係者の手によって開発されています。改善案・修正・新機能の提案は大歓迎です。
@@ -52,3 +56,5 @@ JonStageは、劇団員・OB/OG・関係者の手によって開発されてい�
 ## 謝辞
 
 Jonを始め、開発メンバー、劇団万絵巻団員一同に感謝します。
+
+© Yoroduwemaki / Designed & Developed by Hiroshi ISOBE.
