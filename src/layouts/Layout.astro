@@ -1,0 +1,23 @@
+---
+import 'asagaoui/dist/css/asagaoui.css'
+import 'asagaoui/dist/css/asagaoui-icons.min.css'
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+---
+<!doctype html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+    <link rel="icon" href="/favicon.ico"/>
+    <meta name="generator" content={Astro.generator}/>
+    {/* Meta */}
+    <title>Astro Basics</title>
+</head>
+<body class="aui">
+<Header/>
+<slot/>
+<Footer/>
+</body>
+</html>

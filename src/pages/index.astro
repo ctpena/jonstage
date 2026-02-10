@@ -1,0 +1,63 @@
+---
+import {Image} from 'astro:assets';
+import Layout from '../layouts/Layout.astro';
+import heroimg03 from '../assets/index/heroimg03.avif';
+import heroimg09 from '../assets/index/heroimg09.avif';
+import heroimg23 from '../assets/index/heroimg23.avif';
+import heroimg16 from '../assets/index/heroimg16.avif';
+import heroimg26 from '../assets/index/heroimg26.avif';
+import heroimg31 from '../assets/index/heroimg31.avif';
+---
+
+<Layout>
+    <main>
+        <section class="mt-5 container-xl custom-hero-area">
+            <Image class="custom-hero_img" src={heroimg23} alt=""/>
+            <div class="d-flex justify-center">
+                <h1 class="fw-b fs-36 text-center">殺陣！ダンス！コメディ！<br/>なんでもありのエンタメ劇団！</h1>
+            </div>
+            <Image class="custom-hero_img" src={heroimg31} alt=""/>
+            <Image class="custom-hero_img" src={heroimg16} alt=""/>
+            <Image class="custom-hero_img" src={heroimg03} alt=""/>
+            <Image class="custom-hero_img" src={heroimg26} alt=""/>
+        </section>
+        <section class="container-lg grid g-4 mt-7">
+            <div class="col-12 col-md-6">
+                <h2 class="h2 text-center">私たちについて</h2>
+                <p class="mt-3">
+                    劇団万絵巻は1994年以来、質の高い演劇公演を行う学生劇団として知られ、数多くの公演を行ってきました。私たちの使命は、物語に力強い命を吹き込み観客の記憶に残る体験を想像することです。
+                </p>
+                <p class="mt-3">
+                    私たちは芸術的な卓越性、地域社会との関わりを大切にする学生劇団です。情熱あふれる若い才能が集い、伝統と革新を融合させた作品を通じて観客の皆様に感動をお届けします。
+                </p>
+            </div>
+            <div class="col-12 col-md-6">
+                <Image class="img-fluid" src={heroimg09} alt="2024年劇団万絵巻の集合写真"/>
+            </div>
+        </section>
+    </main>
+    <footer>
+
+    </footer>
+</Layout>
+
+<style lang="scss">
+  .custom-hero-area {
+    display: grid;
+    grid-auto-columns: 1fr;
+    grid-template-columns: .5fr 1fr .5fr;
+    grid-template-rows: 1fr 1fr;
+    gap: .5rem;
+    grid-template-areas:
+    "area1 caption area2"
+    "area3 area4 area5";
+  }
+
+  .custom-hero_img {
+    border-radius: 12px;
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    aspect-ratio: 1 / 1;
+  }
+</style>
