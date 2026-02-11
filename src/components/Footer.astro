@@ -1,31 +1,23 @@
 ---
+import Logo from '../assets/logo.svg';
 ---
 
-<footer class="container-lg py-6">
-    <div class="footer-content">
-        <div class="footer-section">
-            <h3>劇団万絵巻</h3>
-            <p>
-                1993年以来、伝統と革新が融合する学生劇団。物語に命を吹き込み、心に残る感動をお届けします。
-            </p>
+<footer class="mt-6 mb-7">
+    <div class="container-sm">
+        <div class="hstack align-items-center g-3 justify-center">
+            <Logo width={64} height={64}/>
+            <p class="h2">劇団万絵巻</p>
         </div>
-        <div class="footer-section">
-            <h3>クイックリンク</h3>
-            <ul>
-                <li><a href="/performances/">公演</a></li>
-                <li><a href="/blog/">ブログ</a></li>
-                <li><a href="/past-performances/">過去公演</a></li>
-                <li><a href="/contact/">お問い合わせ</a></li>
-            </ul>
-        </div>
-        <div class="footer-section">
-            <h3>お問い合わせ</h3>
-            <p>Email: mail@yoroweb.com</p>
-        </div>
+        <ul class="mt-4 utilitylink-units justify-center">
+            <li><a href="/performances/" class="utilitylink">公演</a></li>
+            <li><a href="/blog/" class="utilitylink">ブログ</a></li>
+            <li><a href="/diary/" class="utilitylink">劇団員日記</a></li>
+            <li><a href="/contact/" class="utilitylink">お問い合わせ</a></li>
+        </ul>
     </div>
-    <div class="footer-bottom">
-        <p>
-            &copy; 1993-{new Date().getFullYear()} Yoroduwemaki. All rights reserved.
+    <div class="container-lg mt-5">
+        <p class="text-right">
+            &copy; 1994-{new Date().getFullYear()} Yoroduwemaki. All rights reserved.
         </p>
     </div>
 </footer>
