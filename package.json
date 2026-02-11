@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "asagaoui": "^0.1.7",
-    "astro": "^5.17.1",
+    "astro": "^5.17.2",
     "sass": "^1.97.3"
   }
 }
