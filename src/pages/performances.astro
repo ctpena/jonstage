@@ -1,18 +1,78 @@
 ---
+import {Image} from 'astro:assets';
 import Layout from "../layouts/Layout.astro";
+import img from '../assets/hero.avif';
 ---
 
 <Layout>
-    <section class="bg-grey-100 py-6 mt-6">
-        <div class="container-sm">
-            <h2 class="h2 mb-3">私たちの公演の歴史</h2>
-            <p class="mb-3">
-                1994年の劇団設立以来、古典的な作品から現代的な作品まで、様々な舞台を制作してきました。このアーカイブは、多様なストーリーテリングと芸術的な卓越性への私たちの取り組みを表しています。
-            </p>
-            <p class="">
-                公演履歴の詳細情報や、研究目的のためのアーカイブ資料のリクエストについては、
-                <a href="/contact/" class="link">お問い合わせ</a>ください。
-            </p>
-        </div>
-    </section>
+    <main>
+        <section class="container-md mt-5">
+            <h1 class="h1">公演</h1>
+        </section>
+        <section class="container-md mt-4">
+            <h2 class="h2">2023年</h2>
+            <div class="mt-3 vstack g-4">
+                <article class="custom-card">
+                    <div class="custom-card__data">
+                        <h3 class="h2">鴉翼</h3>
+                        <time datetime="2023-12-16">2023年12月16日</time>
+                        <p>関西大学劇団万絵巻2023年度卒業公演</p>
+                        <div class="hstack g-3">
+                            <ul>
+                                <li>作：ジキル</li>
+                                <li>演出：ジキル</li>
+                            </ul>
+                        </div>
+                        <p>
+                            維新から数年、平和の様相を見せる社会を一つの出来事が賑わせていた。家畜が食い殺されている…　小さいはずだった異様な怪事件は徐々に波風を立てていき、やがてその牙は無垢な人間に向けられ…</p>
+                        <a class="btn btn-fill is-sm" href="">詳しくみる</a>
+                    </div>
+                    <div class="custom-card__img-area">
+                        <Image class="custom-card__img" src={img} alt=""/>
+                    </div>
+                </article>
+            </div>
+        </section>
+        <section class="bg-grey-100 py-6 mt-6">
+            <div class="container-sm">
+                <h2 class="h2 mb-3">私たちの公演の歴史</h2>
+                <p class="mb-3">
+                    1994年の劇団設立以来、古典的な作品から現代的な作品まで、様々な舞台を制作してきました。このアーカイブは、多様なストーリーテリングと芸術的な卓越性への私たちの取り組みを表しています。
+                </p>
+                <p class="">
+                    公演履歴の詳細情報や、研究目的のためのアーカイブ資料のリクエストについては、
+                    <a href="/contact/" class="link">お問い合わせ</a>ください。
+                </p>
+            </div>
+        </section>
+    </main>
 </Layout>
+
+<style lang="scss">
+  .custom-card {
+    border: 1px solid #949494;
+    display: grid;
+    grid-template-columns: .4fr 1fr;
+    grid-template-rows: auto;
+    grid-template-areas: "img data";
+
+    &__img-area {
+      grid-area: img;
+      border-right: 1px solid #949494;
+    }
+
+    &__img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    &__data {
+      padding: 1rem 1.5rem;
+      grid-area: data;
+      display: flex;
+      flex-direction: column;
+      gap: .5rem;
+    }
+  }
+</style>
