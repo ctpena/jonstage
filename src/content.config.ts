@@ -13,4 +13,12 @@ const performances = defineCollection({
     }),
 });
 
-export const collections = { performances };
+const diary = defineCollection({
+    loader: glob({ pattern: '**/index.md', base: './contents/diary' }),
+    schema: z.object({
+        title: z.string(),
+        date: z.coerce.date(),
+    }),
+});
+
+export const collections = { performances, diary };

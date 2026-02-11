@@ -1,0 +1,55 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+export async function getStaticPaths() {
+  const diaryEntries = await getCollection('diary');
+  
+  const years = [...new Set(diaryEntries.map(entry => entry.data.date.getFullYear().toString()))];
+  return years.map(year => {
+    const entriesInYear = diaryEntries
+      .filter(entry => entry.data.date.getFullYear().toString() === year)
+      .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+    return {
+      params: { year },
+      props: { year, entries: entriesInYear },
+    };
+  });
+}
+
+const { year, entries } = Astro.props;
+
+const formatDate = (date: Date) => {
+    return date.toLocaleDateString('ja-JP', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+    });
+};
+---
+
+<Layout>
+    <main class="mt-5">
+        <div class="container-sm">
+            <header class="mb-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a class="breadcrumb-link" href="/">ホーム</a></li>
+                    <li class="breadcrumb-item"><a class="breadcrumb-link" href="/diary/">劇団員日記</a></li>
+                    <li class="breadcrumb-item">{year}年</li>
+                </ol>
+                <h1 class="h1">{year}年の日記</h1>
+            </header>
+            <ul class="list-unstyled">
+                {entries.map(item => (
+                    <li class="mb-3">
+                        <time class="me-3" datetime={item.data.date.toISOString()}>{formatDate(item.data.date)}</time>
+                        <a href={`/diary/${item.data.date.toISOString().split('T')[0]}/`}>{item.data.title}</a>
+                    </li>
+                ))}
+            </ul>
+            <footer class="mt-5">
+                <a href="/diary/" class="">一覧に戻る</a>
+            </footer>
+        </div>
+    </main>
+</Layout>
