@@ -1,0 +1,98 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import { Image } from 'astro:assets';
+
+export async function getStaticPaths() {
+    const performances = await getCollection('performances');
+    return performances.map((performance: CollectionEntry<'performances'>) => ({
+        params: { slug: performance.id },
+        props: { performance },
+    }));
+}
+
+const { performance } = Astro.props;
+const { Content } = await render(performance);
+---
+
+<Layout>
+    <main>
+        <div class="container-sm mt-5">
+            <nav aria-label="Breadcrumb" class="mb-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">ホーム</a></li>
+                    <li class="breadcrumb-item"><a href="/performances/">公演</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{performance.data.title}</li>
+                </ol>
+            </nav>
+
+            <article>
+                <header class="mb-5">
+                    <h1 class="h1 mb-2">{performance.data.title}</h1>
+                    <time datetime={new Date(performance.data.date).toISOString().split('T')[0]} class="text-muted">
+                        {new Date(performance.data.date).toLocaleDateString('ja-JP', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                        })}
+                    </time>
+                    
+                    <div class="mt-4">
+                        <Image 
+                            src={performance.data.image} 
+                            alt={performance.data.title} 
+                            class="img-fluid rounded shadow"
+                            width={800}
+                        />
+                    </div>
+
+                    <div class="mt-4 p-4 bg-light rounded">
+                        <dl class="row mb-0">
+                            <dt class="col-sm-3">作</dt>
+                            <dd class="col-sm-9">{performance.data.playwright}</dd>
+                            <dt class="col-sm-3">演出</dt>
+                            <dd class="col-sm-9">{performance.data.director}</dd>
+                        </dl>
+                    </div>
+                </header>
+
+                <div class="content mt-5">
+                    <Content />
+                </div>
+            </article>
+
+            <div class="mt-6 pt-5 border-top mb-6">
+                <a href="/performances/" class="btn btn-outline-primary">
+                    <i class="ai-arrow-left me-2"></i>公演一覧に戻る
+                </a>
+            </div>
+        </div>
+    </main>
+</Layout>
+
+<style lang="scss" is:global>
+    .content {
+        h2 {
+            font-size: 1.75rem;
+            margin-top: 2.5rem;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--aui-primary, #007bff);
+        }
+        h3 {
+            font-size: 1.5rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+        p {
+            margin-bottom: 1.25rem;
+            line-height: 1.8;
+        }
+        ul, ol {
+            margin-bottom: 1.25rem;
+        }
+        li {
+            margin-bottom: 0.5rem;
+        }
+    }
+</style>
