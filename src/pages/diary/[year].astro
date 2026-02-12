@@ -31,15 +31,15 @@ const formatDate = (date: Date) => {
 <Layout>
     <main class="mt-5">
         <div class="container-md">
-            <header class="mb-4">
-                <ol class="breadcrumb">
+            <header class="">
+                <ol class="breadcrumb mb-2">
                     <li class="breadcrumb-item"><a class="breadcrumb-link" href="/">ホーム</a></li>
                     <li class="breadcrumb-item"><a class="breadcrumb-link" href="/diary/">劇団員日記</a></li>
                     <li class="breadcrumb-item">{year}年</li>
                 </ol>
                 <h1 class="h1">{year}年の日記</h1>
             </header>
-            <ul class="container-sm">
+            <ul class="container-sm mt-4">
                 {entries.map(item => (
                     <li class="mb-3">
                         <time class="me-3" datetime={item.data.date.toISOString()}>{formatDate(item.data.date)}</time>
