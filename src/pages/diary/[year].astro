@@ -1,23 +1,33 @@
 ---
-import { getCollection } from 'astro:content';
+import {getCollection, render} from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 
 export async function getStaticPaths() {
-  const diaryEntries = await getCollection('diary');
-  
-  const years = [...new Set(diaryEntries.map(entry => entry.data.date.getFullYear().toString()))];
-  return years.map(year => {
-    const entriesInYear = diaryEntries
-      .filter(entry => entry.data.date.getFullYear().toString() === year)
-      .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
-    return {
-      params: { year },
-      props: { year, entries: entriesInYear },
-    };
-  });
+    const diaryEntries = await getCollection('diary');
+
+    const years = [...new Set(diaryEntries.map(entry => entry.data.date.getFullYear().toString()))];
+    return years.map(year => {
+        const entriesInYear = diaryEntries
+            .filter(entry => entry.data.date.getFullYear().toString() === year)
+            .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+        return {
+            params: {year},
+            props: {year, entries: entriesInYear},
+        };
+    });
 }
 
-const { year, entries } = Astro.props;
+const {year, entries} = Astro.props;
+
+const entriesWithContent = await Promise.all(
+    entries.map(async (entry) => {
+        const {Content} = await render(entry);
+        return {entry, Content};
+    })
+);
+
+const allEntries = await getCollection('diary');
+const years = [...new Set(allEntries.map(entry => entry.data.date.getFullYear()))].sort((a, b) => b - a);
 
 const formatDate = (date: Date) => {
     return date.toLocaleDateString('ja-JP', {
@@ -30,26 +40,64 @@ const formatDate = (date: Date) => {
 
 <Layout>
     <main class="mt-5">
-        <div class="container-md">
-            <header class="">
+        <section class="">
+            <div class="container-md">
                 <ol class="breadcrumb mb-2">
                     <li class="breadcrumb-item"><a class="breadcrumb-link" href="/">ホーム</a></li>
                     <li class="breadcrumb-item"><a class="breadcrumb-link" href="/diary/">劇団員日記</a></li>
                     <li class="breadcrumb-item">{year}年</li>
                 </ol>
                 <h1 class="h1">{year}年の日記一覧</h1>
-            </header>
-            <ul class="container-sm mt-4">
-                {entries.map(item => (
-                    <li class="mb-3">
-                        <time class="me-3" datetime={item.data.date.toISOString()}>{formatDate(item.data.date)}</time>
-                        <a href={`/diary/${item.data.date.toISOString().split('T')[0]}/`}>{item.data.title}</a>
-                    </li>
+                <ul class="utilitylink-units mt-3 flex-wrap">
+                    {years.map(y => (
+                            <li class="utilitylink-item">
+                                <a href={`/diary/${y}/`} class="utilitylink">{y}年</a>
+                            </li>
+                    ))}
+                </ul>
+                <details class="accordion mt-3">
+                    <summary class="accordion-header">{year}年の日記一覧 - テーブル表示（{entries.length}件）</summary>
+                    <div class="accordion-body">
+                        <table class="w-100">
+                            <thead>
+                            <tr>
+                                <th>日付</th>
+                                <th>タイトル</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {entries.map(item => (
+                                    <tr>
+                                        <td style="width: 130px;">
+                                            <time class=""
+                                                  datetime={item.data.date.toISOString()}>{formatDate(item.data.date)}</time>
+                                        </td>
+                                        <td><a class="link"
+                                               href={`/diary/${item.data.date.toISOString().split('T')[0]}/`}>{item.data.title}</a>
+                                        </td>
+                                    </tr>
+                            ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </details>
+            </div>
+            <div class="container-sm mt-4 vstack g-5">
+                {entriesWithContent.map(({entry, Content}) => (
+                        <article class="">
+                            <h2 class="h2 mb-3">
+                                <a class="link"
+                                   href={`/diary/${entry.data.date.toISOString().split('T')[0]}/`}>{entry.data.title}</a>
+                            </h2>
+                            <time class=""
+                                  datetime={entry.data.date.toISOString()}>{formatDate(entry.data.date)}</time>
+                            <div class="mt-3 content">
+                                <Content/>
+                            </div>
+                            <hr class="mt-3 divider w-25">
+                        </article>
                 ))}
-            </ul>
-            <footer class="mt-5">
-                <a href="/diary/" class="">一覧に戻る</a>
-            </footer>
-        </div>
+            </div>
+        </section>
     </main>
 </Layout>
