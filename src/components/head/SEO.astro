@@ -1,0 +1,37 @@
+---
+interface Props {
+    title?: string;
+    description?: string;
+    image?: string;
+    canonicalURL?: URL;
+    type?: 'website' | 'article';
+}
+
+const {
+    title,
+    description = "関西大学高槻キャンパスで活動している学生劇団で、1994年以来ダンスコメディを始めなんでもありのエンターテイメントを追求しています。",
+    image = "/ogp.png",
+    canonicalURL = new URL(Astro.url.pathname, Astro.site),
+    type = 'website',
+} = Astro.props;
+
+const fullTitle = title ? `${title} - 劇団万絵巻` : "劇団万絵巻 - 関西大学演劇サークル";
+---
+<!-- Global Metadata -->
+<title>{fullTitle}</title>
+<meta name="description" content={description ? description : ""}/>
+<link rel="canonical" href={canonicalURL}/>
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content={type}/>
+<meta property="og:url" content={canonicalURL}/>
+<meta property="og:title" content={fullTitle}/>
+<meta property="og:description" content={description}/>
+<meta property="og:image" content={new URL(image, Astro.url)}/>
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image"/>
+<meta property="twitter:url" content={canonicalURL}/>
+<meta property="twitter:title" content={fullTitle}/>
+<meta property="twitter:description" content={description}/>
+<meta property="twitter:image" content={new URL(image, Astro.url)}/>

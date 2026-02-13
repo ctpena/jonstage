@@ -4,6 +4,19 @@ import 'asagaoui/dist/css/asagaoui-icons.min.css'
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import Favicon from '../components/head/Favicon.astro';
+import SEO from '../components/head/SEO.astro';
+import SchemaOrg from '../components/head/SchemaOrg.astro';
+
+interface Props {
+    title?: string;
+    description?: string;
+    image?: string;
+    type?: 'website' | 'article';
+    schemaType?: 'TheaterGroup' | 'Event' | 'BlogPosting';
+    schemaData?: any;
+}
+
+const { title, description, image, type, schemaType = 'TheaterGroup', schemaData = {} } = Astro.props;
 ---
 <!doctype html>
 <html lang="ja">
@@ -11,8 +24,8 @@ import Favicon from '../components/head/Favicon.astro';
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <meta name="generator" content={Astro.generator}/>
-    {/* Meta */}
-    <title>劇団万絵巻 | 関西大学演劇サークル</title>
+    <SEO {title} {description} {image} {type} />
+    <SchemaOrg type={schemaType} data={schemaData} />
     {/* Favicon */}
     <Favicon/>
 </head>

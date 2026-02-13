@@ -25,9 +25,20 @@ const formatDate = (date: Date) => {
 };
 
 const {Content} = await render(entry);
+
+const diaryData = {
+    title: entry.data.title,
+    date: entry.data.date.toISOString(),
+};
 ---
 
-<Layout>
+<Layout
+    title={entry.data.title + " - 劇団員日記"}
+    description={`${formatDate(entry.data.date)}の劇団員日記「${entry.data.title}」です。`}
+    type="article"
+    schemaType="BlogPosting"
+    schemaData={diaryData}
+>
     <main class="mt-5">
         <article class="">
             <header class="container-md">

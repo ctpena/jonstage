@@ -1,0 +1,59 @@
+---
+interface Props {
+  type: 'TheaterGroup' | 'Event' | 'BlogPosting';
+  data: any;
+}
+
+const { type, data } = Astro.props;
+
+let schema = {};
+
+if (type === 'TheaterGroup') {
+  schema = {
+    "@context": "https://schema.org",
+    "@type": "TheaterGroup",
+    "name": "劇団万絵巻",
+    "url": Astro.site,
+    "logo": new URL("/favicon.svg", Astro.site),
+    "description": "劇団万絵巻は1994年以来、質の高い演劇公演を行う関西大学の学生劇団です。",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "吹田市",
+      "addressRegion": "大阪府",
+      "addressCountry": "JP"
+    }
+  };
+} else if (type === 'Event') {
+  schema = {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    "name": data.title,
+    "startDate": data.date,
+    "description": data.excerpt,
+    "image": data.image,
+    "performer": {
+      "@type": "TheaterGroup",
+      "name": "劇団万絵巻"
+    },
+    "director": {
+        "@type": "Person",
+        "name": data.director
+    }
+  };
+} else if (type === 'BlogPosting') {
+  schema = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": data.title,
+    "datePublished": data.date,
+    "author": {
+      "@type": "TheaterGroup",
+      "name": "劇団万絵巻"
+    }
+  };
+}
+
+const jsonLd = JSON.stringify(schema);
+---
+
+<script type="application/ld+json" set:html={jsonLd} />

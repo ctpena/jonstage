@@ -22,7 +22,10 @@ const performancesByYear = sortedPerformances.reduce((acc: Record<number, Collec
 const years = Object.keys(performancesByYear).map(Number).sort((a: number, b: number) => b - a);
 ---
 
-<Layout>
+<Layout
+    title="公演"
+    description="劇団万絵巻の過去から現在までの公演一覧です。1994年の設立以来、様々な作品を上演してきました。"
+>
     <main>
         <section class="container-md mt-5">
             <h1 class="h1">公演</h1>

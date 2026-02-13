@@ -13,9 +13,24 @@ export async function getStaticPaths() {
 
 const { performance } = Astro.props;
 const { Content } = await render(performance);
+
+const performanceData = {
+    title: performance.data.title,
+    date: performance.data.date,
+    excerpt: performance.data.excerpt,
+    image: performance.data.image.src,
+    director: performance.data.director
+};
 ---
 
-<Layout>
+<Layout
+    title={performance.data.title + " - 公演"}
+    description={performance.data.excerpt}
+    image={performance.data.image.src}
+    type="article"
+    schemaType="Event"
+    schemaData={performanceData}
+>
     <main>
         <div class="container-sm mt-5">
             <nav aria-label="Breadcrumb" class="mb-4">
