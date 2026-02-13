@@ -101,3 +101,13 @@ const formatDate = (date: Date) => {
         </section>
     </main>
 </Layout>
+
+<style lang="scss">
+  .accordion-header:before {
+    content: "\f17b";
+  }
+
+  .accordion[open] .accordion-header::before {
+    content: "\f178";
+  }
+</style>
