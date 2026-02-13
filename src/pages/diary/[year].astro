@@ -47,7 +47,7 @@ const formatDate = (date: Date) => {
                     <li class="breadcrumb-item"><a class="breadcrumb-link" href="/diary/">劇団員日記</a></li>
                     <li class="breadcrumb-item">{year}年</li>
                 </ol>
-                <h1 class="h1">{year}年の日記一覧</h1>
+                <h1 class="h1">{year}年の劇団員日記</h1>
                 <ul class="utilitylink-units mt-3 flex-wrap">
                     {years.map(y => (
                             <li class="utilitylink-item">
@@ -56,7 +56,7 @@ const formatDate = (date: Date) => {
                     ))}
                 </ul>
                 <details class="accordion mt-3">
-                    <summary class="accordion-header">{year}年の日記一覧 - テーブル表示（{entries.length}件）</summary>
+                    <summary class="accordion-header">{year}年の目次 - テーブル表示（{entries.length}件）</summary>
                     <div class="accordion-body">
                         <table class="w-100">
                             <thead>

@@ -43,6 +43,7 @@ const formatDate = (date: Date) => {
                         </li>
                 ))}
             </ul>
+            <p class="text-right">最新50件 / 全{diaryEntries.length}件</p>
         </section>
         <section class="container-sm mt-4 vstack g-5">
             {entriesWithContent.map(({entry, Content}) => (
