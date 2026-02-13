@@ -1,5 +1,8 @@
 ---
 import Logo from '../assets/logo.svg';
+import instagram from "../assets/instagram.avif";
+import xLogo from "../assets/x-logo.avif";
+import {Image} from 'astro:assets';
 ---
 
 <footer class="mt-6 mb-7">
@@ -14,6 +17,14 @@ import Logo from '../assets/logo.svg';
             <li><a href="/diary/" class="utilitylink">劇団員日記</a></li>
             <li><a href="/contact/" class="utilitylink">お問い合わせ</a></li>
         </ul>
+        <div class="hstack g-4 mt-4 justify-center">
+            <a href="https://www.instagram.com/yoroduwemaki" rel="external">
+                <Image width="40" height="40" class="" src={instagram} alt="Instagramのロゴ"/>
+            </a>
+            <a href="https://x.com/Yoroduwemaki" rel="external">
+                <Image width="40" height="40" class="" src={xLogo} alt="Xのロゴ"/>
+            </a>
+        </div>
     </div>
     <div class="container-lg mt-5">
         <p class="text-right">
