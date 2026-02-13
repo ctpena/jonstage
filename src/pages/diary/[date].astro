@@ -34,8 +34,11 @@ const {Content} = await render(entry);
                 <ol class="breadcrumb mb-2">
                     <li class="breadcrumb-item"><a class="breadcrumb-link" href="/">ホーム</a></li>
                     <li class="breadcrumb-item"><a class="breadcrumb-link" href="/diary/">劇団員日記</a></li>
-                    <li class="breadcrumb-item"><a class="breadcrumb-link"
-                                                   href={`/diary/${entry.data.date.getFullYear()}/`}>{entry.data.date.getFullYear()}年</a>
+                    <li class="breadcrumb-item">
+                        <a class="breadcrumb-link"
+                           href={`/diary/${entry.data.date.getFullYear()}/#` + entry.data.date.toISOString().split('T')[0]}>
+                            {entry.data.date.getFullYear()}年
+                        </a>
                     </li>
                     <li class="breadcrumb-item">{entry.data.title}</li>
                 </ol>
