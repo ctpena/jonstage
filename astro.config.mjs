@@ -9,6 +9,8 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
     site: 'https://yoroweb.com',
     trailingSlash: 'always',
-    adapter: cloudflare(),
+    adapter: cloudflare({
+        imageService: 'compile'
+    }),
     integrations: [sitemap()]
 });
