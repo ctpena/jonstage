@@ -10,6 +10,27 @@
 
 JonStageは次のフォルダとファイルで構成されています。
 
+```text
+/
+├── LICENSE
+├── README.md
+├── astro.config.mjs
+├── contents
+│   ├── blog/
+│   ├── diary/
+│   └── performances/
+├── package.json
+├── public/
+├── src
+│   ├── assets
+│   ├── components
+│   ├── content.config.ts
+│   ├── layouts
+│   └── pages
+├── tsconfig.json
+└── wrangler.jsonc
+```
+
 ## コマンド
 
 すべてのコマンドは、プロジェクトのルートディレクトリで実行してください。
