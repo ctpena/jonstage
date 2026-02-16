@@ -16,11 +16,20 @@ const { Content } = await render(performance);
 
 const performanceData = {
     title: performance.data.title,
-    date: performance.data.date,
+    date: new Date(performance.data.date).toISOString(),
     excerpt: performance.data.excerpt,
     image: performance.data.image.src,
-    director: performance.data.director
+    director: performance.data.director,
+    offers: {
+        price: 0,
+        url: Astro.url.href
+    }
 };
+
+const breadcrumbs = [
+    { name: '公演', item: '/performances/' },
+    { name: performance.data.title, item: Astro.url.pathname }
+];
 ---
 
 <Layout
@@ -30,6 +39,7 @@ const performanceData = {
     type="article"
     schemaType="Event"
     schemaData={performanceData}
+    breadcrumbs={breadcrumbs}
 >
     <main>
         <div class="container-sm mt-5">

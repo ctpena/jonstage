@@ -30,6 +30,12 @@ const diaryData = {
     title: entry.data.title,
     date: entry.data.date.toISOString(),
 };
+
+const breadcrumbs = [
+    { name: '劇団員日記', item: '/diary/' },
+    { name: `${entry.data.date.getFullYear()}年`, item: `/diary/${entry.data.date.getFullYear()}/` },
+    { name: entry.data.title, item: Astro.url.pathname }
+];
 ---
 
 <Layout
@@ -38,6 +44,7 @@ const diaryData = {
     type="article"
     schemaType="BlogPosting"
     schemaData={diaryData}
+    breadcrumbs={breadcrumbs}
 >
     <main class="mt-5">
         <article class="">

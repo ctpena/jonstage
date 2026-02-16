@@ -12,11 +12,12 @@ interface Props {
     description?: string;
     image?: string;
     type?: 'website' | 'article';
-    schemaType?: 'TheaterGroup' | 'Event' | 'BlogPosting';
+    schemaType?: 'TheaterGroup' | 'Event' | 'BlogPosting' | 'ItemList';
     schemaData?: any;
+    breadcrumbs?: Array<{ name: string; item: string }>;
 }
 
-const { title, description, image, type, schemaType = 'TheaterGroup', schemaData = {} } = Astro.props;
+const { title, description, image, type, schemaType = 'TheaterGroup', schemaData = {}, breadcrumbs = [] } = Astro.props;
 ---
 <!doctype html>
 <html lang="ja">
@@ -25,7 +26,7 @@ const { title, description, image, type, schemaType = 'TheaterGroup', schemaData
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <meta name="generator" content={Astro.generator}/>
     <SEO {title} {description} {image} {type} />
-    <SchemaOrg type={schemaType} data={schemaData} />
+    <SchemaOrg type={schemaType} data={schemaData} {breadcrumbs} />
     {/* Favicon */}
     <Favicon/>
 </head>

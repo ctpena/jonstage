@@ -1,111 +1,145 @@
 ---
 interface Props {
-    type: 'TheaterGroup' | 'Event' | 'BlogPosting';
-    data: any;
+    type: 'TheaterGroup' | 'Event' | 'BlogPosting' | 'ItemList';
+    data?: any;
+    breadcrumbs?: Array<{ name: string; item: string }>;
 }
 
-const {type, data} = Astro.props;
+const {type, data, breadcrumbs = []} = Astro.props;
 
-let schema = {};
+const siteUrl = Astro.site ? Astro.site.origin : 'https://yoroweb.com';
+const theaterGroupId = `${siteUrl}/#theatergroup`;
 
-if (type === 'TheaterGroup') {
-    schema = {
-        "@context": "https://schema.org",
-        "@graph": [
-            {
-                "@type": "WebSite",
-                "name": "劇団万絵巻",
-                "url": "https://yoroweb.com",
-                "inLanguage": "ja",
-            },
-            {
-                "@type": "TheaterGroup",
-                "name": "劇団万絵巻",
-                "url": "https://yoroweb.com",
-                "logo": {
-                    "@type": "ImageObject",
-                    "url": "https://yoroweb.com/favicon.svg"
-                },
-                "image": "https://yoroweb.com/ogp.png",
-                "description": "関西大学高槻キャンパスで活動している学生劇団で、1994年以来ダンスコメディを始めなんでもありのエンターテイメントを追求しています。",
-                "foundingDate": "1994-04",
-                "foundingLocation": {
-                    "@type": "Place",
-                    "name": "関西大学高槻キャンパス",
-                    "address": {
-                        "@type": "PostalAddress",
-                        "streetAddress": "霊仙寺町2丁目1番1号",
-                        "addressLocality": "高槻市",
-                        "addressRegion": "大阪府",
-                        "postalCode": "569-1095",
-                        "addressCountry": "JP"
-                    }
-                },
-                "location": {
-                    "@type": "Place",
-                    "name": "関西大学高槻キャンパス",
-                    "address": {
-                        "@type": "PostalAddress",
-                        "streetAddress": "霊仙寺町2丁目1番1号",
-                        "addressLocality": "高槻市",
-                        "addressRegion": "大阪府",
-                        "postalCode": "569-1095",
-                        "addressCountry": "JP"
-                    }
-                },
-                "parentOrganization": {
-                    "@type": "CollegeOrUniversity",
-                    "name": "関西大学",
-                    "url": "https://www.kansai-u.ac.jp"
-                },
-                "email": "mail@yoroweb.com",
-                "sameAs": [
-                    "https://x.com/Yoroduwemaki",
-                    "https://www.instagram.com/yoroduwemaki"
-                ]
-            },
-            {
-                "@type": "BreadcrumbList",
-                "itemListElement": [
-                    {
-                        "@type": "ListItem",
-                        "position": 1,
-                        "name": "ホーム",
-                        "item": "https://yoroweb.com"
-                    }
-                ]
-            }
-        ]
-    };
-} else if (type === 'Event') {
-    schema = {
-        "@context": "https://schema.org",
+const theaterGroupSchema = {
+    "@type": "TheaterGroup",
+    "@id": theaterGroupId,
+    "name": "劇団万絵巻",
+    "url": siteUrl,
+    "logo": {
+        "@type": "ImageObject",
+        "url": `${siteUrl}/favicon.svg`
+    },
+    "image": `${siteUrl}/ogp.png`,
+    "description": "関西大学高槻キャンパスで活動している学生劇団で、1994年以来ダンスコメディを始めなんでもありのエンターテイメントを追求しています。",
+    "foundingDate": "1994-04",
+    "foundingLocation": {
+        "@type": "Place",
+        "name": "関西大学高槻キャンパス",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "霊仙寺町2丁目1番1号",
+            "addressLocality": "高槻市",
+            "addressRegion": "大阪府",
+            "postalCode": "569-1095",
+            "addressCountry": "JP"
+        }
+    },
+    "location": {
+        "@type": "Place",
+        "name": "関西大学高槻キャンパス",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "霊仙寺町2丁目1番1号",
+            "addressLocality": "高槻市",
+            "addressRegion": "大阪府",
+            "postalCode": "569-1095",
+            "addressCountry": "JP"
+        }
+    },
+    "parentOrganization": {
+        "@type": "CollegeOrUniversity",
+        "name": "関西大学",
+        "url": "https://www.kansai-u.ac.jp"
+    },
+    "email": "mail@yoroweb.com",
+    "sameAs": [
+        "https://x.com/Yoroduwemaki",
+        "https://www.instagram.com/yoroduwemaki"
+    ]
+};
+
+const breadcrumbSchema = {
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+        {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "劇団万絵巻",
+            "item": siteUrl
+        },
+        ...breadcrumbs.map((bc, index) => ({
+            "@type": "ListItem",
+            "position": index + 2,
+            "name": bc.name,
+            "item": bc.item.startsWith('http') ? bc.item : `${siteUrl}${bc.item}`
+        }))
+    ]
+};
+
+let mainSchema: any = null;
+
+if (type === 'Event') {
+    mainSchema = {
         "@type": "Event",
         "name": data.title,
         "startDate": data.date,
         "description": data.excerpt,
-        "image": data.image,
-        "performer": {
-            "@type": "TheaterGroup",
-            "name": "劇団万絵巻"
-        },
-        "director": {
-            "@type": "Person",
-            "name": data.director
+        "image": data.image.startsWith('http') ? data.image : `${siteUrl}${data.image}`,
+        "performer": {"@id": theaterGroupId},
+        "publisher": {"@id": theaterGroupId},
+        "location": {
+            "@type": "Place",
+            "name": data.locationName || "関西大学高槻キャンパス",
+            "address": data.address || {
+                "@type": "PostalAddress",
+                "addressLocality": "高槻市",
+                "addressRegion": "大阪府",
+                "addressCountry": "JP"
+            }
         }
     };
+    if (data.offers) {
+        mainSchema.offers = {
+            "@type": "Offer",
+            "price": data.offers.price,
+            "priceCurrency": "JPY",
+            "availability": "https://schema.org/InStock",
+            "url": data.offers.url || Astro.url.href
+        };
+    }
 } else if (type === 'BlogPosting') {
-    schema = {
-        "@context": "https://schema.org",
+    mainSchema = {
         "@type": "BlogPosting",
         "headline": data.title,
         "datePublished": data.date,
-        "author": {
-            "@type": "TheaterGroup",
-            "name": "劇団万絵巻"
-        }
+        "author": {"@id": theaterGroupId},
+        "publisher": {"@id": theaterGroupId},
+        "image": data.image ? (data.image.startsWith('http') ? data.image : `${siteUrl}${data.image}`) : `${siteUrl}/ogp.png`
+    };
+} else if (type === 'ItemList') {
+    mainSchema = {
+        "@type": "ItemList",
+        "itemListElement": data.items.map((item: any, index: number) => ({
+            "@type": "ListItem",
+            "position": index + 1,
+            "url": item.url.startsWith('http') ? item.url : `${siteUrl}${item.url}`
+        }))
     };
 }
+
+const graph = [
+    theaterGroupSchema,
+    breadcrumbSchema
+];
+
+if (mainSchema) {
+    graph.push(mainSchema);
+}
+
+const schema = {
+    "@context": "https://schema.org",
+    "@graph": graph
+};
 
 const jsonLd = JSON.stringify(schema);
 ---
