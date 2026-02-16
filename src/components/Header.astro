@@ -35,10 +35,34 @@ import Logo from "../assets/logo.svg";
             </ul>
         </div>
         <div class="header-button">
-            <button class="hamburger-iconbtn" type="button">
+            <button class="hamburger-iconbtn" type="button" command="show-modal" commandfor="header-dialog-menu">
                 <i class="hamburger-icon"></i>
                 メニュー
             </button>
         </div>
     </nav>
 </header>
+<dialog id="header-dialog-menu" class="drawer">
+    <div class="drawer-header d-flex justify-end">
+        <button class="hamburger-btn" type="button" command="close" commandfor="header-dialog-menu"><i
+                class="hamburger-icon close"></i>
+            閉じる
+        </button>
+    </div>
+    <div class="drawer-body">
+        <ul class="mobilemenu">
+            <li class="mobilemenu-item"><a class="mobilemenu-link" href="/performances/">公演</a></li>
+            <li class="mobilemenu-item"><a class="mobilemenu-link" href="/blog/">ブログ</a></li>
+            <li class="mobilemenu-item"><a class="mobilemenu-link" href="/diary/">劇団員日記</a></li>
+            <li class="mobilemenu-item"><a class="mobilemenu-link" href="/contact/">お問い合わせ</a></li>
+        </ul>
+        <hr class="divider my-4">
+        <ul class="vstack g-3 px-3">
+            <li class="utilitylink-item"><a rel="external" class="utilitylink" href="https://x.com/Yoroduwemaki">X&nbsp;(旧:Twitter)</a>
+            </li>
+            <li class="utilitylink-item"><a rel="external" class="utilitylink"
+                                            href="https://www.instagram.com/yoroduwemaki">Instagram</a></li>
+        </ul>
+    </div>
+    <div class="drawer-footer"></div>
+</dialog>
